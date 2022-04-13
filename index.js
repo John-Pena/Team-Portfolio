@@ -65,12 +65,12 @@ const promptManager = () => {
       }
     }
   ])
-    .then(function (response) {
+    .then(function (res) {
       const manager = new Manager(
-        response.name,
-        response.id,
-        response.email,
-        response.officeNumber
+        res.name,
+        res.id,
+        res.email,
+        res.officeNumber
       );
       console.log(manager);
       managers.push(manager);
@@ -94,16 +94,16 @@ const menu = () => {
       message: 'Would you like to add a new team member?',
       default: false
 
-    }  
-  ])
-  .then(function(res) {
-    if (res.confirmAdd === true) {
-      engOrIntern();
-    } else {
-      console.log("Finished!");
-      createPage(managers, engineers, interns);
     }
-  })
+  ])
+    .then(function (res) {
+      if (res.confirmAdd === true) {
+        engOrIntern();
+      } else {
+        console.log("Finished!");
+        createPage(managers, engineers, interns);
+      }
+    })
 }
 
 const engOrIntern = () => {
@@ -115,19 +115,86 @@ const engOrIntern = () => {
       choices: ['Engineer', 'Intern']
     }
   ])
-  .then(function(res) {
-    switch (res.role) {
-      case 'Engineer':
-        inquirer.prompt([
-          // create Engineer questions
-        ])
-      
-      case 'Intern':
-        inquirer.prompt([
-          // create Intern questions here
-        ])
-    }
-  })
+    .then(function (res) {
+      switch (res.role) {
+        // If user selects Engineer
+        case 'Engineer':
+          inquirer.prompt([
+            // create Engineer questions
+            {
+              type: 'input',
+              name: 'name',
+              message: 'What is the name of the Engineer? (Required)',
+              validate: nameInput => {
+                if (nameInput) {
+                  return true;
+                } else {
+                  console.log("Please enter the Engineer's name");
+                  return false;
+                }
+              }
+            },
+            {
+              type: 'input',
+              name: 'id',
+              message: "Please provide Engineer's id number",
+              validate: idInput => {
+                if (idInput) {
+                  return true;
+                } else {
+                  console.log("Please enter the Engineer's id");
+                  return false;
+                }
+              }
+            },
+            {
+              type: 'input',
+              name: 'email',
+              message: "What is the Engineer's email?",
+              validate: emailInput => {
+                if (emailInput) {
+                  return true;
+                } else {
+                  console.log('Please enter the email for the Engineer');
+                  return false;
+                }
+              }
+            },
+            {
+              type: 'input',
+              name: 'github',
+              message: 'What is the Engineers github name?',
+              validate: githubInput => {
+                if (githubInput) {
+                  return true;
+                } else {
+                  console.log("Please enter the Engineer's github name");
+                  return false;
+                }
+              }
+            }
+          ])
+          .then(function(res) {
+            const engineer = new Engineer(
+              res.name,
+              res.id,
+              res.email,
+              res.github
+            );
+            console.log(engineer);
+            engineers.push(engineer);
+          })
+          .then(function() {
+            return menu();
+          });
+
+        // If user selects Intern
+        case 'Intern':
+          inquirer.prompt([
+            // create Intern questions here
+          ])
+      }
+    })
 };
 
 function initialize() {
