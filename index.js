@@ -174,6 +174,7 @@ const engOrIntern = () => {
               }
             }
           ])
+          // creates new engineer object with user input information
           .then(function(res) {
             const engineer = new Engineer(
               res.name,
@@ -192,7 +193,72 @@ const engOrIntern = () => {
         case 'Intern':
           inquirer.prompt([
             // create Intern questions here
+            {
+              type: 'input',
+              name: 'name',
+              message: "What is the Intern's name?",
+              validate: nameInput => {
+                if (nameInput) {
+                  return true;
+                } else {
+                  console.log("Please enter the Intern's name");
+                  return false;
+                }
+              }
+            },
+            {
+              type: 'input',
+              name: 'id',
+              message: "Please provide Intern's id number",
+              validate: idInput => {
+                if (idInput) {
+                  return true;
+                } else {
+                  console.log("Please enter the Intern's id");
+                  return false;
+                }
+              }
+            },
+            {
+              type: 'input',
+              name: 'email',
+              message: "What is the Intern's email?",
+              validate: emailInput => {
+                if (emailInput) {
+                  return true;
+                } else {
+                  console.log('Please enter an email for the Intern');
+                  return false;
+                }
+              }
+            },
+            {
+              type: 'input',
+              name: 'school',
+              message: 'What school did the Intern attend?',
+              validate: schoolInput => {
+                if (schoolInput) {
+                  return true;
+                } else {
+                  console.log("Please enter a school name for the Intern");
+                  return false;
+                }
+              }
+            }
           ])
+          .then(function(res) {
+            const intern = new Intern(
+              res.name,
+              res.id,
+              res.email,
+              res.school
+            );
+            console.log(intern);
+            interns.push(intern);
+          })
+          .then(function () {
+            return menu();
+          });
       }
     })
 };
