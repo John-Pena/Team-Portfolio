@@ -3,7 +3,7 @@ const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const Manager = require('./lib/Manager');
 const Emplopyee = require('./lib/Employee');
-const ExpandPrompt = require('inquirer/lib/prompts/expand');
+const fs = require('fs');
 
 const managers = [];
 const engineers = [];
@@ -91,13 +91,44 @@ const menu = () => {
     {
       type: 'confirm',
       name: 'confirmAdd',
-      message: 'Would you like to add a member?',
+      message: 'Would you like to add a new team member?',
       default: false
 
     }  
   ])
-  .then()
+  .then(function(res) {
+    if (res.confirmAdd === true) {
+      engOrIntern();
+    } else {
+      console.log("Finished!");
+      createPage(managers, engineers, interns);
+    }
+  })
 }
+
+const engOrIntern = () => {
+  inquirer.prompt([
+    {
+      type: 'list',
+      name: 'role',
+      message: "What is the employee's role?",
+      choices: ['Engineer', 'Intern']
+    }
+  ])
+  .then(function(res) {
+    switch (res.role) {
+      case 'Engineer':
+        inquirer.prompt([
+          // create Engineer questions
+        ])
+      
+      case 'Intern':
+        inquirer.prompt([
+          // create Intern questions here
+        ])
+    }
+  })
+};
 
 function initialize() {
   console.log(`
