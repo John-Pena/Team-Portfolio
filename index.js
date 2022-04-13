@@ -5,10 +5,10 @@ const Manager = require('./lib/Manager');
 const Emplopyee = require('./lib/Employee')
 
 const managers = [];
-const engineer = [];
-const intern = [];
+const engineers = [];
+const interns = [];
 
-
+// asks for manager information
 const promptManager = () => {
   return inquirer.prompt([
     {
@@ -79,6 +79,7 @@ const promptManager = () => {
     });
 };
 
+// asks user if they would like to add employee (Engineer or Intern)
 const menu = () => {
   console.log(`
   =================
@@ -101,6 +102,7 @@ const menu = () => {
     },
   ])
     .then(function (data) {
+      // In the case Engineer is selected
       switch (data.role) {
         case 'Engineer':
           inquirer.prompt([
@@ -164,14 +166,82 @@ const menu = () => {
               response.email,
               response.github
             );
-            console.log()
+            console.log(engineer);
+            engineers.push(engineer);
           })
+          .then(function() {
+            return menu();
+          })
+        
+        // In the case Intern is selected
         case 'Intern':
           inquirer.prompt([
             {
-
+              type: 'input',
+              name: 'name',
+              message: 'What is the name of the Intern? (Required)',
+              validate: nameInput => {
+                if (nameInput) {
+                  return true;
+                } else {
+                  console.log('Please enter the Interns name');
+                  return false;
+                }
+              }
+            },
+            {
+              type: 'input',
+              name: 'id',
+              message: 'Please provide Interns id number',
+              validate: idInput => {
+                if (idInput) {
+                  return true;
+                } else {
+                  console.log('Please enter the Interns id');
+                  return false;
+                }
+              }
+            },
+            {
+              type: 'input',
+              name: 'email',
+              message: "What is the Interns email?",
+              validate: emailInput => {
+                if (emailInput) {
+                  return true;
+                } else {
+                  console.log('Please enter the email for the Interns');
+                  return false;
+                }
+              }
+            },
+            {
+              type: 'input',
+              name: 'school',
+              message: 'What school is the Intern attending?',
+              validate: schoolInput => {
+                if (schoolInput) {
+                  return true;
+                } else {
+                  console.log("Please enter the Interns school name");
+                  return false;
+                }
+              }
             }
           ])
+          .then(function(response) {
+            const intern = new Intern(
+              response.name,
+              response.id,
+              response.email,
+              response.github
+            );
+            console.log(intern);
+            interns.push(intern);
+          })
+          .then(function() {
+            return menu();
+          });
       }
     })
 }
