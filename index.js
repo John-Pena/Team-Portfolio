@@ -2,7 +2,6 @@ const inquirer = require('inquirer');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const Manager = require('./lib/Manager');
-const Emplopyee = require('./lib/Employee');
 const fs = require('fs');
 
 const managers = [];
@@ -188,6 +187,7 @@ const engOrIntern = () => {
           .then(function() {
             return menu();
           });
+          break;
 
         // If user selects Intern
         case 'Intern':
@@ -259,6 +259,7 @@ const engOrIntern = () => {
           .then(function () {
             return menu();
           });
+          break;
       }
     })
 };
@@ -271,5 +272,9 @@ function initialize() {
 
   promptManager();
 };
+
+const createPage = function(managers, engineers, interns) {
+  console.log(managers, engineers, interns);
+}
 
 initialize();
