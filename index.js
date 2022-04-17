@@ -3,6 +3,7 @@ const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const Manager = require('./lib/Manager');
 const fs = require('fs');
+const generate = require('./src/generatePage');
 
 const managers = [];
 const engineers = [];
@@ -274,7 +275,11 @@ function initialize() {
 };
 
 const createPage = function(managers, engineers, interns) {
-  console.log(managers, engineers, interns);
+  const pageHTML = generate(managers, engineers, interns);
+  fs.writeFile('./index.html', pageHTML, err => {
+    if (err) throw new Error(err);
+    console.log('index.html has been created!');
+  })
 }
 
 initialize();
