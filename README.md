@@ -22,6 +22,7 @@ Clone the repository to your preferred destination on your PC. Once the reposito
 
 ## Usage
 This application is used inside the terminal. A prompt of many questions will be shown inside the repository for the user to answer. Once the user is done entering their team information, a index.html will be created inside the dist folder. Open up the index.html to view the team cards in the web browser.
+https://drive.google.com/file/d/1mPqyacVvJqMCNIMnp2PS09FJgA57klCn/view
 
 ## Test
 The application requires Node, and Inquirer to be installed to successfully run the application. Once these have been installed, the application will run inside the Terminal using node index.
