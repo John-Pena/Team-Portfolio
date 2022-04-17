@@ -3,11 +3,9 @@ const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const Manager = require('./lib/Manager');
 const fs = require('fs');
-const generate = require('./src/generatePage');
+const generatePage = require('./src/generatePage');
 
-const managers = [];
-const engineers = [];
-const interns = [];
+const employees = [];
 
 // asks for manager information
 const promptManager = () => {
@@ -28,7 +26,7 @@ const promptManager = () => {
     {
       type: 'input',
       name: 'id',
-      message: "Please provide Manager's id number",
+      message: "Please provide Manager's id number:",
       validate: idInput => {
         if (idInput) {
           return true;
@@ -54,7 +52,7 @@ const promptManager = () => {
     {
       type: 'input',
       name: 'officeNumber',
-      message: 'Please enter the managers office number',
+      message: 'Please enter the managers office number:',
       validate: officeNumberInput => {
         if (officeNumberInput) {
           return true;
@@ -73,46 +71,20 @@ const promptManager = () => {
         res.officeNumber
       );
       console.log(manager);
-      managers.push(manager);
+      employees.push(manager);
     })
     .then(function () {
-      menu();
+      engOrIntern();
     });
 };
-
-// asks user if they would like to add employee (Engineer or Intern)
-const menu = () => {
-  console.log(`
-  ====================
-  Add New Team Member
-  ====================`);
-
-  inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'confirmAdd',
-      message: 'Would you like to add a new team member?',
-      default: false
-
-    }
-  ])
-    .then(function (res) {
-      if (res.confirmAdd === true) {
-        engOrIntern();
-      } else {
-        console.log("Finished!");
-        createPage(managers, engineers, interns);
-      }
-    })
-}
 
 const engOrIntern = () => {
   inquirer.prompt([
     {
       type: 'list',
       name: 'role',
-      message: "What is the employee's role?",
-      choices: ['Engineer', 'Intern']
+      message: "Would you like to add an Engineer, Intern, or Finish the form?",
+      choices: ['Engineer', 'Intern', 'Finish']
     }
   ])
     .then(function (res) {
@@ -137,7 +109,7 @@ const engOrIntern = () => {
             {
               type: 'input',
               name: 'id',
-              message: "Please provide Engineer's id number",
+              message: "Please provide Engineer's id number:",
               validate: idInput => {
                 if (idInput) {
                   return true;
@@ -183,10 +155,10 @@ const engOrIntern = () => {
               res.github
             );
             console.log(engineer);
-            engineers.push(engineer);
+            employees.push(engineer);
           })
           .then(function() {
-            return menu();
+            return engOrIntern();
           });
           break;
 
@@ -210,7 +182,7 @@ const engOrIntern = () => {
             {
               type: 'input',
               name: 'id',
-              message: "Please provide Intern's id number",
+              message: "Please provide Intern's id number:",
               validate: idInput => {
                 if (idInput) {
                   return true;
@@ -255,12 +227,16 @@ const engOrIntern = () => {
               res.school
             );
             console.log(intern);
-            interns.push(intern);
+            employees.push(intern);
           })
           .then(function () {
-            return menu();
+            return engOrIntern();
           });
           break;
+        case 'Finish':
+            console.log("Finished!");
+            createPage(employees);
+            break;
       }
     })
 };
@@ -274,12 +250,12 @@ function initialize() {
   promptManager();
 };
 
-const createPage = function(managers, engineers, interns) {
-  const pageHTML = generate(managers, engineers, interns);
-  fs.writeFile('./index.html', pageHTML, err => {
+const createPage = function(employees) {
+  const pageHTML = generatePage(employees);
+  fs.writeFile('./dist/index.html', pageHTML, err => {
     if (err) throw new Error(err);
     console.log('index.html has been created!');
   })
-}
+};
 
 initialize();

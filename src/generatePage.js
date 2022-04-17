@@ -1,62 +1,84 @@
-function generateManagerCard(managers) {
+
+function generateManagerCard(data) {
+
   return `
-  <div class="card column is-four-fifths mx-auto has-background-primary">
-
-    <h3 class="">${managers.role}</h3>
-    <p>
-      Name: ${managers.name}
-      </br>
-      ID: ${managers.id}
-      </br>
-      Email: ${managers.email}
-      </br>
-      Office Number: ${managers.officeNumber}
-    </p>
-
-  </div>
+        <div class="card column is-one-third mx-auto has-background-primary">
+          <h3>${data.role}</h3>
+          <p>
+            Name: ${data.name}
+            </br>
+            ID: ${data.id}
+            </br>
+            Email: <a href="mailto:${data.email}">Email</a>
+            </br>
+            Office Number: ${data.officeNumber}
+          </p>
+        </div>
 `
 };
 
-function generateEngineerCard(engineers) {
-  return `
-    <div class="card column is-four-fifths mx-auto has-background-primary">
+function generateEngineerCard(data) {
 
-      <h3 class="">${engineers.role}</h3>
-      <p>
-        Name: ${engineers.name}
-        </br>
-        ID: ${engineers.id}
-        </br>
-        Email: <a href="mailto:${engineers.email}">Email</a>
-        </br>
-        GitHub: <a href="www.github.com/${engineers.github}">${engineers.github}</a>
-        </p>
-    
-    </div>
+  return `
+        <div class="card column is-one-third mx-auto has-background-info">
+          <h3>${data.role}</h3>
+          <p>
+            Name: ${data.name}
+            </br>
+            ID: ${data.id}
+            </br>
+            Email: <a href="mailto:${data.email}">Email</a>
+            </br>
+            GitHub: <a href="www.github.com/${data.github}">${data.github}</a>
+          </p>
+        </div>
 `
 };
 
-function generateInterCard(interns) {
+function generateInterCard(data) {
   return `
-  <!-- Intern Section -->
-  <div class="card column is-half has-background-info">
-
-    <h3 class="">${interns.role}</h3>
-    <p>
-      Name: ${interns.name}
-      </br>
-      ID: ${interns.id}
-      </br>
-      Email: ${interns.email}
-      </br>
-      School: ${interns.school}
-    </p>
-
-  </div>
+        <div class="card column is-one-third mx-auto has-background-warning">
+          <h3>${data.role}</h3>
+          <p>
+            Name: ${data.name}
+            </br>
+            ID: ${data.id}
+            </br>
+            Email: ${data.email}
+            </br>
+            School: ${data.school}
+          </p>
+        </div>
   `
 };
 
-function generatePage() {
+function generatePage(data) {
+  testArray = [];
+
+  for (var i = 0; i < data.length; i++) {
+    const employee = data[i];
+    const role = employee.getRole();
+
+    if (role === 'Manager') {
+      const manager = generateManagerCard(employee);
+      testArray.push(manager);
+    }
+    if (role === 'Engineer') {
+      const engineer = generateEngineerCard(employee);
+      testArray.push(engineer);
+    }
+    if (role === 'Intern') {
+      const intern = generateInterCard(employee);
+      testArray.push(intern);
+    }
+  }
+
+  const employeeCards = testArray.join('');
+  const generate = generateHTML(employeeCards);
+  return generate;
+};
+
+function generateHTML(employeeCards) {
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -80,27 +102,15 @@ function generatePage() {
   <section class="my-3">
     <h2 class="is-size-3 has-text-centered text-dark bg-primary p-2 display-inline-block">Meet the Team!</h2>
     <div class="flex-row justify-space-between columns">
-      <!-- Manager Section -->
-      <section class="column">
-        ${generateManagerCard}
-
-        </br>
-
-        ${generateEngineerCard}
-
-        ${generateInterCard}
-
-      </section>
-
-    </section>
-
-  </div>
-</section>
+      <!-- Cards sit here -->
+      ${employeeCards}
+    </div>
+  </section>
 
 </body>
 
 </html>
 `
-};
+}
 
 module.exports = generatePage;
